@@ -45,6 +45,11 @@ do
     fi
     set -e
 
+    if [ -z "$DEVEL_ENV" ]
+    then
+      . load_devel_env.sh
+    fi
+
   done
 
   if [[ $feature_failed -eq 1 ]]; then
