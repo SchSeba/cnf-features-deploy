@@ -43,6 +43,23 @@ do
       echo "[WARN] Deployment of feature '$feature' failed."
       feature_failed=1
     fi
+
+    # TODO: Change this using a custome catalogsource
+    # We need to use the until because the 10 second sleep it too much after the OLM start creating the objects it will
+    # not take another look on the csv change.
+    if [[ ${feature} == "ptp" ]]; then
+      until oc -n openshift-ptp get csv -oyaml | sed "s,image-registry.openshift-image-registry.svc:5000/openshift/,registry-proxy.engineering.redhat.com/rh-osbs/openshift-,g" | ${OC_TOOL} apply -f -
+      do
+        echo "[WARN] Temp sed '$feature' failed, retry."
+      done
+    fi
+
+    if [[ ${feature} == "sriov" ]]; then
+      until oc -n openshift-sriov-network-operator get csv -oyaml | sed "s,image-registry.openshift-image-registry.svc:5000/openshift/,registry-proxy.engineering.redhat.com/rh-osbs/openshift-,g" | ${OC_TOOL} apply -f -
+      do
+        echo "[WARN] Temp sed '$feature' failed, retry."
+      done
+    fi
     set -e
 
   done
