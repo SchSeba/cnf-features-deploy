@@ -35,6 +35,7 @@ spec:
         - image: image-registry.openshift-image-registry.svc:5000/dpdk-testing/s2i-dpdk-app
           securityContext:
             runAsUser: 0
+            privileged: true
             capabilities:
               add: ["IPC_LOCK","SYS_RESOURCE"]
           imagePullPolicy: Always
